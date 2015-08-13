@@ -8,10 +8,24 @@ type Checker interface {
 	Check(data interface{}) *Error
 }
 
-type CheckerFunc func(data interface{}) *Error
+func CheckerFunc(name string, fun func(data interface{}) *Error) *checkerFunc {
+	return &checkerFunc{
+		Name: name,
+		Fun:  fun,
+	}
+}
 
-func (p CheckerFunc) Check(data interface{}) *Error {
-	return p(data)
+type checkerFunc struct {
+	Name string
+	Fun  func(data interface{}) *Error
+}
+
+func (f *checkerFunc) Check(data interface{}) *Error {
+	return f.Fun(data)
+}
+
+func (f *checkerFunc) String() string {
+	return f.Name
 }
 
 func compareValue(fieldError *Error, k string, rawExp interface{}, rawActual interface{}) error {

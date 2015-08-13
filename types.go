@@ -2,7 +2,7 @@ package schema
 
 import "fmt"
 
-var IsInteger = CheckerFunc(isInteger)
+var IsInteger = CheckerFunc("IsInteger", isInteger)
 
 func isInteger(data interface{}) *Error {
 	switch i := data.(type) {
@@ -17,7 +17,7 @@ func isInteger(data interface{}) *Error {
 	return SelfError(fmt.Sprintf("is no integer but %T", data))
 }
 
-var IsString = CheckerFunc(isString)
+var IsString = CheckerFunc("IsString", isString)
 
 func isString(data interface{}) *Error {
 	if _, ok := data.(string); !ok {
@@ -27,7 +27,7 @@ func isString(data interface{}) *Error {
 	return nil
 }
 
-var IsBool = CheckerFunc(isBool)
+var IsBool = CheckerFunc("IsBool", isBool)
 
 func isBool(data interface{}) *Error {
 	if _, ok := data.(bool); !ok {
@@ -37,7 +37,7 @@ func isBool(data interface{}) *Error {
 	return nil
 }
 
-var IsFloat = CheckerFunc(isFloat)
+var IsFloat = CheckerFunc("IsFloat", isFloat)
 
 func isFloat(data interface{}) *Error {
 	switch data.(type) {
@@ -48,7 +48,7 @@ func isFloat(data interface{}) *Error {
 	return SelfError(fmt.Sprintf("is no float but %T", data))
 }
 
-var IsPresent = CheckerFunc(isPresent)
+var IsPresent = CheckerFunc("IsPresent", isPresent)
 
 func isPresent(data interface{}) *Error {
 	// Map is checking this implicitly, we only need to be called

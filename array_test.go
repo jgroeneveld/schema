@@ -75,3 +75,37 @@ func TestArrayEach_Failure(t *testing.T) {
 		t.Fatalf("wrong error msg: %s", err.Errors["1"])
 	}
 }
+
+func TestArrayIncluding_Success(t *testing.T) {
+	data := dataFromJSON(t, `["red", "blue", 12, {"a": 1}]`)
+
+	err := ArrayIncluding(IsInteger, Map{"a": IsInteger}, "red").Check(data)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestArrayIncluding_Failure(t *testing.T) {
+	data := dataFromJSON(t, `["red", "blue", {"a": 1}]`)
+
+	err := ArrayIncluding(IsInteger, "green", Map{"a": IsInteger}, "red").Check(data)
+
+	if err == nil {
+		t.Fatal("expected error")
+	}
+	// TODO make order of errors better
+	if err.Errors[selfField] != `[1] green:string not included, [0] IsInteger did not match` {
+		t.Fatalf("wrong error msg: %s", err.Errors[selfField])
+	}
+}
+
+func TestArrayIncluding_CheckerPrio(t *testing.T) {
+	data := dataFromJSON(t, `[ 1,2,3,4,5,6 ]`)
+
+	err := ArrayIncluding(IsPresent, IsInteger, 1, 2).Check(data)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+}

@@ -2,11 +2,12 @@ package schema
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 )
 
 func Array(exps ...interface{}) Checker {
-	return CheckerFunc(func(data interface{}) *Error {
+	return CheckerFunc("Array", func(data interface{}) *Error {
 		fieldError := &Error{}
 
 		dataArray, ok := data.([]interface{})
@@ -32,7 +33,7 @@ func Array(exps ...interface{}) Checker {
 }
 
 func ArrayEach(exp interface{}) Checker {
-	return CheckerFunc(func(data interface{}) *Error {
+	return CheckerFunc("ArrayEach", func(data interface{}) *Error {
 		fieldError := &Error{}
 
 		dataArray, ok := data.([]interface{})
@@ -50,4 +51,88 @@ func ArrayEach(exp interface{}) Checker {
 		}
 		return nil
 	})
+}
+
+func ArrayIncluding(exps ...interface{}) Checker {
+	return CheckerFunc("ArrayIncluding", func(data interface{}) *Error {
+		fieldError := &Error{}
+
+		dataArray, ok := data.([]interface{})
+		if !ok {
+			return SelfError(fmt.Sprintf("is no array: %t", data))
+		}
+
+		sortableExps := make([]*origExp, len(exps))
+		for i, exp := range exps {
+			sortableExps[i] = &origExp{OriginalIndex: i, Exp: exp}
+		}
+		sortExps(sortableExps)
+
+		matchedIndices := map[int]bool{}
+
+		for _, exp := range sortableExps {
+			foundMatching := false
+
+			for i, v := range dataArray {
+				if matchedIndices[i] {
+					continue
+				}
+				e := &Error{}
+				compareValue(e, strconv.Itoa(i), exp.Exp, v)
+				if !e.Any() {
+					matchedIndices[i] = true
+					foundMatching = true
+					break
+				}
+			}
+
+			if !foundMatching {
+				switch t := exp.Exp.(type) {
+				case Checker:
+					fieldError.Add(selfField, fmt.Sprintf("[%d] %s did not match", exp.OriginalIndex, t))
+				default:
+					fieldError.Add(selfField, fmt.Sprintf("[%d] %v:%T not included", exp.OriginalIndex, t, t))
+				}
+			}
+		}
+
+		if fieldError.Any() {
+			return fieldError
+		}
+		return nil
+	})
+}
+
+func sortExps(exps sortableExps) {
+	sort.Sort(exps)
+}
+
+type origExp struct {
+	OriginalIndex int
+	Exp           interface{}
+}
+
+type sortableExps []*origExp
+
+func (exps sortableExps) Len() int {
+	return len(exps)
+}
+
+func (exps sortableExps) Swap(i, j int) {
+	exps[i], exps[j] = exps[j], exps[i]
+}
+
+func (exps sortableExps) Less(i, j int) bool {
+	a, b := exps[i], exps[j]
+	return expPrio(a.Exp) < expPrio(b.Exp)
+}
+
+func expPrio(a interface{}) int {
+	if a == IsPresent {
+		return 9
+	}
+	if _, isChecker := a.(Checker); isChecker {
+		return 8
+	}
+	return 0
 }
