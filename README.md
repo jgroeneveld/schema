@@ -26,7 +26,7 @@
             "id": schema.IsInteger,
             "name": "Max Mustermann",
             "age": 42,
-            "height": IsFloat,
+            "height": schema.IsFloat,
             "footsize": schema.IsPresent,
         }.Check(data)
         
