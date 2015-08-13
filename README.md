@@ -5,6 +5,7 @@
 ## ideas
 
 "ConcreteValue"
+IsPresent
 IsString, IsInt, IsFloat, IsBool
 Map, MapIncluding
 Array, ArrayUnordered, ArrayIncluding, ArrayEach
@@ -14,19 +15,20 @@ Array, ArrayUnordered, ArrayIncluding, ArrayEach
     // my_test.go
     
     func TestJSON(t *testing.T) {
-        bodyReader, err := makeRequest()
+        jsonData := getJSON()
+        
+        var data interface{}
+        err := json.Unmarshal(jsonData, &data)
         if err != nil {
             t.Fatal(err)
         }
-        defer bodyReader.Close()
-        
         
         err := schema.Map{
             "id": schema.IsInteger,
             "name": "Max Mustermann",
             "age": 42,
             "footsize": schema.IsGiven,
-        }.Check(bodyReader)
+        }.Check(data)
         
         if err != nil {
             t.Fatal(err)

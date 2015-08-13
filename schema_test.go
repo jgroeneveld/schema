@@ -11,6 +11,8 @@ func TestFullSuccess(t *testing.T) {
 		"name": "Max Mustermann",
 		"age": 42,
 		"footsize": "unknown",
+		"admin": false,
+		"height": 1.91,
 		"address": {
 			"street": "Musterstrasse 12",
 			"zip": "12345",
@@ -23,6 +25,8 @@ func TestFullSuccess(t *testing.T) {
 		"id":       IsInteger,
 		"name":     "Max Mustermann",
 		"age":      42,
+		"admin":    IsBool,
+		"height":   IsFloat,
 		"footsize": IsPresent,
 		"address": Map{
 			"street":  IsString,
