@@ -4,10 +4,10 @@
 
 ## Checkers
 
-"ConcreteValue"
-IsPresent, IsString, IsInt, IsFloat, IsBool
-Map, MapIncluding
-Array, ArrayUnordered, ArrayIncluding, ArrayEach
+- "ConcreteValue"
+- IsPresent, IsString, IsInt, IsFloat, IsBool
+- Map, MapIncluding
+- Array, ArrayUnordered, ArrayIncluding, ArrayEach
  
 ## How to use
 

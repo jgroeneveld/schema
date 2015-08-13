@@ -5,28 +5,49 @@ import (
 	"strconv"
 )
 
-type Array []interface{}
+func Array(exps ...interface{}) Checker {
+	return CheckerFunc(func(data interface{}) *Error {
+		fieldError := &Error{}
 
-func (a Array) Check(data interface{}) *Error {
-	fieldError := &Error{}
+		dataArray, ok := data.([]interface{})
+		if !ok {
+			return SelfError(fmt.Sprintf("is no array: %t", data))
+		}
 
-	dataArray, ok := data.([]interface{})
-	if !ok {
-		return SelfError(fmt.Sprintf("is no array: %t", data))
-	}
+		if len(exps) != len(dataArray) {
+			fieldError.Add(selfField, fmt.Sprintf("length does not match %d != %d", len(dataArray), len(exps)))
+		}
 
-	if len(a) != len(dataArray) {
-		fieldError.Add(selfField, fmt.Sprintf("length does not match %d != %d", len(dataArray), len(a)))
-	}
+		for i := 0; i < len(exps) && i < len(dataArray); i++ {
+			actual := dataArray[i]
+			exp := exps[i]
+			compareValue(fieldError, strconv.Itoa(i), exp, actual)
+		}
 
-	for i := 0; i < len(a) && i < len(dataArray); i++ {
-		actual := dataArray[i]
-		exp := a[i]
-		compareValue(fieldError, strconv.Itoa(i), exp, actual)
-	}
+		if fieldError.Any() {
+			return fieldError
+		}
+		return nil
+	})
+}
 
-	if fieldError.Any() {
-		return fieldError
-	}
-	return nil
+func ArrayEach(exp interface{}) Checker {
+	return CheckerFunc(func(data interface{}) *Error {
+		fieldError := &Error{}
+
+		dataArray, ok := data.([]interface{})
+		if !ok {
+			return SelfError(fmt.Sprintf("is no array: %t", data))
+		}
+
+		for i := 0; i < len(dataArray); i++ {
+			actual := dataArray[i]
+			compareValue(fieldError, strconv.Itoa(i), exp, actual)
+		}
+
+		if fieldError.Any() {
+			return fieldError
+		}
+		return nil
+	})
 }

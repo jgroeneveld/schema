@@ -33,7 +33,7 @@ func TestFullSuccess(t *testing.T) {
 			"zip":     IsString,
 			"country": IsString,
 		},
-		"tags": Array{"blue", "red"},
+		"tags": Array("blue", "red"),
 	}.Check(data)
 
 	if err != nil {
@@ -60,7 +60,7 @@ func TestNestingFailures(t *testing.T) {
 				"lat": "12",
 			},
 		},
-		"tags": Array{"blue"},
+		"tags": Array("blue"),
 	}.Check(data)
 
 	if err == nil {

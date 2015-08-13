@@ -14,14 +14,14 @@ func isInteger(data interface{}) *Error {
 		}
 	}
 
-	return SelfError(fmt.Sprintf("is no Integer %q", data))
+	return SelfError(fmt.Sprintf("is no integer but %T", data))
 }
 
 var IsString = CheckerFunc(isString)
 
 func isString(data interface{}) *Error {
 	if _, ok := data.(string); !ok {
-		return SelfError(fmt.Sprintf("is no string %q", data))
+		return SelfError(fmt.Sprintf("is no string but %T", data))
 	}
 
 	return nil
@@ -31,7 +31,7 @@ var IsBool = CheckerFunc(isBool)
 
 func isBool(data interface{}) *Error {
 	if _, ok := data.(bool); !ok {
-		return SelfError(fmt.Sprintf("is no bool %q", data))
+		return SelfError(fmt.Sprintf("is no bool but %T", data))
 	}
 
 	return nil
@@ -45,7 +45,7 @@ func isFloat(data interface{}) *Error {
 		return nil
 	}
 
-	return SelfError(fmt.Sprintf("is no float %q", data))
+	return SelfError(fmt.Sprintf("is no float but %T", data))
 }
 
 var IsPresent = CheckerFunc(isPresent)
