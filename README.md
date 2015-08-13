@@ -2,11 +2,10 @@
 
 **schema** makes it easier to check if map/array structures match a certain schema. Great for testing JSON API's.
 
-## ideas
+## Checkers
 
 "ConcreteValue"
-IsPresent
-IsString, IsInt, IsFloat, IsBool
+IsPresent, IsString, IsInt, IsFloat, IsBool
 Map, MapIncluding
 Array, ArrayUnordered, ArrayIncluding, ArrayEach
  
