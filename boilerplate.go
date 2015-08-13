@@ -2,9 +2,15 @@ package schema
 
 import "fmt"
 
-type PredicateFunc func(data interface{}) *Error
+const selfField = "."
 
-func (p PredicateFunc) Check(data interface{}) *Error {
+type Checker interface {
+	Check(data interface{}) *Error
+}
+
+type CheckerFunc func(data interface{}) *Error
+
+func (p CheckerFunc) Check(data interface{}) *Error {
 	return p(data)
 }
 
@@ -33,7 +39,7 @@ func compareValue(fieldError *Error, k string, rawExp interface{}, rawActual int
 		}
 	case Checker:
 		if err := exp.Check(rawActual); err != nil {
-			fieldError.Add(k, err.Error())
+			fieldError.Merge(k, err)
 		}
 	default:
 		panic("unknown type to check")
