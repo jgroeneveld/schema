@@ -15,6 +15,36 @@ func (m Map) Check(data interface{}) *Error {
 		return SelfError(fmt.Sprintf("is no map: %t", data))
 	}
 
+	checkExtraKeys(fieldError, m, dataMap)
+	checkMissingKeys(fieldError, m, dataMap)
+	checkValues(fieldError, m, dataMap)
+
+	if fieldError.Any() {
+		return fieldError
+	}
+	return nil
+}
+
+type MapIncluding map[string]interface{}
+
+func (m MapIncluding) Check(data interface{}) *Error {
+	fieldError := &Error{}
+
+	dataMap, ok := data.(map[string]interface{})
+	if !ok {
+		return SelfError(fmt.Sprintf("is no map: %t", data))
+	}
+
+	checkMissingKeys(fieldError, m, dataMap)
+	checkValues(fieldError, m, dataMap)
+
+	if fieldError.Any() {
+		return fieldError
+	}
+	return nil
+}
+
+func checkExtraKeys(fieldError *Error, m map[string]interface{}, dataMap map[string]interface{}) {
 	extraKeys := []string{}
 	for k := range dataMap {
 		if _, found := m[k]; !found {
@@ -24,7 +54,9 @@ func (m Map) Check(data interface{}) *Error {
 	if len(extraKeys) > 0 {
 		fieldError.Add(selfField, fmt.Sprintf("Found extra keys: %q", strings.Join(extraKeys, ", ")))
 	}
+}
 
+func checkMissingKeys(fieldError *Error, m map[string]interface{}, dataMap map[string]interface{}) {
 	missingKeys := []string{}
 	for k := range m {
 		if _, found := dataMap[k]; !found {
@@ -34,7 +66,9 @@ func (m Map) Check(data interface{}) *Error {
 	if len(missingKeys) > 0 {
 		fieldError.Add(selfField, fmt.Sprintf("Missing keys: %q", strings.Join(missingKeys, ", ")))
 	}
+}
 
+func checkValues(fieldError *Error, m map[string]interface{}, dataMap map[string]interface{}) {
 	for k, exp := range m {
 		actual, found := dataMap[k]
 		if !found {
@@ -42,9 +76,4 @@ func (m Map) Check(data interface{}) *Error {
 		}
 		compareValue(fieldError, k, exp, actual)
 	}
-
-	if fieldError.Any() {
-		return fieldError
-	}
-	return nil
 }

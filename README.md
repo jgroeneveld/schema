@@ -27,7 +27,8 @@ Array, ArrayUnordered, ArrayIncluding, ArrayEach
             "id": schema.IsInteger,
             "name": "Max Mustermann",
             "age": 42,
-            "footsize": schema.IsGiven,
+            "height": IsFloat,
+            "footsize": schema.IsPresent,
         }.Check(data)
         
         if err != nil {
