@@ -39,7 +39,7 @@ func (e *Error) Error() string {
 func (e *Error) Merge(otherField string, other *Error) {
 	for field, msg := range other.Errors {
 		f := otherField
-		if field != "." {
+		if field != selfField {
 			f = fmt.Sprintf("%s.%s", otherField, field)
 		}
 		e.Add(f, msg)

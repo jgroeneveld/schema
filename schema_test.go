@@ -18,7 +18,9 @@ func TestFullSuccess(t *testing.T) {
 			"zip": "12345",
 			"country": "Germany"
 		},
-		"tags": ["blue","red"]
+		"tags": ["blue","red"],
+		"friends": ["hans", "peter", "harald", "gundel"],
+		"pi": [3,1,4,1,5,9,2,6,5,3,5,9]
 	}`)
 
 	err := Map{
@@ -33,7 +35,9 @@ func TestFullSuccess(t *testing.T) {
 			"zip":     IsString,
 			"country": IsString,
 		},
-		"tags": Array("blue", "red"),
+		"tags":    Array("blue", "red"),
+		"friends": ArrayIncluding("hans"),
+		"pi":      ArrayEach(IsInteger),
 	}.Check(data)
 
 	if err != nil {

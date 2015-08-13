@@ -53,8 +53,8 @@ func ArrayEach(exp interface{}) Checker {
 	})
 }
 
-func ArrayIncluding(exps ...interface{}) Checker {
-	return CheckerFunc("ArrayIncluding", func(data interface{}) *Error {
+func ArrayUnordered(exps ...interface{}) Checker {
+	return CheckerFunc("ArrayUnordered", func(data interface{}) *Error {
 		fieldError := &Error{}
 
 		dataArray, ok := data.([]interface{})
@@ -62,36 +62,19 @@ func ArrayIncluding(exps ...interface{}) Checker {
 			return SelfError(fmt.Sprintf("is no array: %t", data))
 		}
 
-		sortableExps := make([]*origExp, len(exps))
-		for i, exp := range exps {
-			sortableExps[i] = &origExp{OriginalIndex: i, Exp: exp}
+		if len(exps) != len(dataArray) {
+			fieldError.Add(selfField, fmt.Sprintf("length does not match %d != %d", len(dataArray), len(exps)))
 		}
-		sortExps(sortableExps)
 
-		matchedIndices := map[int]bool{}
+		matchedIndices, err := arrayIncludingMatchedIndices(exps, dataArray)
+		if err != nil {
+			fieldError.Merge(selfField, err)
+		}
 
-		for _, exp := range sortableExps {
-			foundMatching := false
-
-			for i, v := range dataArray {
-				if matchedIndices[i] {
-					continue
-				}
-				e := &Error{}
-				compareValue(e, strconv.Itoa(i), exp.Exp, v)
-				if !e.Any() {
-					matchedIndices[i] = true
-					foundMatching = true
-					break
-				}
-			}
-
-			if !foundMatching {
-				switch t := exp.Exp.(type) {
-				case Checker:
-					fieldError.Add(selfField, fmt.Sprintf("[%d] %s did not match", exp.OriginalIndex, t))
-				default:
-					fieldError.Add(selfField, fmt.Sprintf("[%d] %v:%T not included", exp.OriginalIndex, t, t))
+		if len(matchedIndices) != len(dataArray) {
+			for i := 0; i < len(dataArray); i++ {
+				if !matchedIndices[i] {
+					fieldError.Add(strconv.Itoa(i), "unmatched")
 				}
 			}
 		}
@@ -101,6 +84,60 @@ func ArrayIncluding(exps ...interface{}) Checker {
 		}
 		return nil
 	})
+}
+
+func ArrayIncluding(exps ...interface{}) Checker {
+	return CheckerFunc("ArrayIncluding", func(data interface{}) *Error {
+		dataArray, ok := data.([]interface{})
+		if !ok {
+			return SelfError(fmt.Sprintf("is no array: %t", data))
+		}
+
+		_, err := arrayIncludingMatchedIndices(exps, dataArray)
+		return err
+	})
+}
+
+func arrayIncludingMatchedIndices(exps []interface{}, dataArray []interface{}) (matchedIndices map[int]bool, err *Error) {
+	fieldError := &Error{}
+
+	sortableExps := make([]*origExp, len(exps))
+	for i, exp := range exps {
+		sortableExps[i] = &origExp{OriginalIndex: i, Exp: exp}
+	}
+	sortExps(sortableExps)
+
+	matchedIndices = map[int]bool{}
+	for _, exp := range sortableExps {
+		foundMatching := false
+
+		for i, v := range dataArray {
+			if matchedIndices[i] {
+				continue
+			}
+			e := &Error{}
+			compareValue(e, strconv.Itoa(i), exp.Exp, v)
+			if !e.Any() {
+				matchedIndices[i] = true
+				foundMatching = true
+				break
+			}
+		}
+
+		if !foundMatching {
+			switch t := exp.Exp.(type) {
+			case Checker:
+				fieldError.Add(selfField, fmt.Sprintf("[%d] %s did not match", exp.OriginalIndex, t))
+			default:
+				fieldError.Add(selfField, fmt.Sprintf("[%d] %v:%T not included", exp.OriginalIndex, t, t))
+			}
+		}
+	}
+
+	if fieldError.Any() {
+		return matchedIndices, fieldError
+	}
+	return matchedIndices, nil
 }
 
 func sortExps(exps sortableExps) {

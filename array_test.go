@@ -109,3 +109,42 @@ func TestArrayIncluding_CheckerPrio(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestArrayUnordered_Success(t *testing.T) {
+	data := dataFromJSON(t, `["red", 12, {"a": 1}]`)
+
+	err := ArrayUnordered(IsInteger, Map{"a": IsInteger}, "red").Check(data)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestArrayUnordered_ExtraElements(t *testing.T) {
+	data := dataFromJSON(t, `["red", 12, 42, {"a": 1}]`)
+
+	err := ArrayUnordered(IsInteger, Map{"a": IsInteger}, "red").Check(data)
+
+	if err == nil {
+		t.Fatal("expected error")
+	}
+	if err.Errors[selfField] != `length does not match 4 != 3` {
+		t.Fatalf("wrong error msg: %s", err.Errors[selfField])
+	}
+	if err.Errors["2"] != `unmatched` {
+		t.Fatalf("wrong error msg: %s", err.Errors["2"])
+	}
+}
+
+func TestArrayUnordered_MissingElement(t *testing.T) {
+	data := dataFromJSON(t, `[12, {"a": 1}]`)
+
+	err := ArrayUnordered(IsInteger, Map{"a": IsInteger}, "red").Check(data)
+
+	if err == nil {
+		t.Fatal("expected error")
+	}
+	if err.Errors[selfField] != `length does not match 2 != 3, [2] red:string not included` {
+		t.Fatalf("wrong error msg: %s", err.Errors[selfField])
+	}
+}
