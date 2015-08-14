@@ -2,7 +2,7 @@
 
 **schema** makes it easier to check if map/array structures match a certain schema. Great for testing JSON API's.
 
-## Checkers
+## Matchers
 
 - "ConcreteValue"
 - IsPresent, IsString, IsInt, IsFloat, IsBool
@@ -28,7 +28,7 @@
             "age": 42,
             "height": schema.IsFloat,
             "footsize": schema.IsPresent,
-        }.Check(data)
+        }.Match(data)
         
         if err != nil {
             t.Fatal(err)

@@ -12,7 +12,7 @@ func TestMap_Success(t *testing.T) {
 	err := Map{
 		"id":   IsInteger,
 		"name": "Max Mustermann",
-	}.Check(data)
+	}.Match(data)
 
 	if err != nil {
 		t.Fatal(err)
@@ -22,7 +22,7 @@ func TestMap_Success(t *testing.T) {
 func TestMap_ExtraKeys(t *testing.T) {
 	data := dataFromJSON(t, `{"hans":true, "wurst": "def"}`)
 
-	err := Map{}.Check(data)
+	err := Map{}.Match(data)
 
 	if err == nil {
 		t.Fatal("Expected error got none")
@@ -36,7 +36,7 @@ func TestMap_ExtraKeys(t *testing.T) {
 func TestMap_MissingKeys(t *testing.T) {
 	data := dataFromJSON(t, `{}`)
 
-	err := Map{"id": 12}.Check(data)
+	err := Map{"id": 12}.Match(data)
 
 	if err == nil {
 		t.Fatal("Expected error got none")
@@ -49,7 +49,7 @@ func TestMap_MissingKeys(t *testing.T) {
 func TestMap_WrongValue(t *testing.T) {
 	data := dataFromJSON(t, `{"id": 47, "name": "hans", "footsize": "12 inches"}`)
 
-	err := Map{"id": 12, "name": "wurst", "footsize": 12}.Check(data)
+	err := Map{"id": 12, "name": "wurst", "footsize": 12}.Match(data)
 
 	if err == nil {
 		t.Fatal("Expected error got none")
@@ -68,7 +68,7 @@ func TestMap_WrongValue(t *testing.T) {
 func TestMapIncluding_Success(t *testing.T) {
 	data := dataFromJSON(t, `{"id": 47, "name": "hans", "footsize": "12 inches"}`)
 
-	err := MapIncluding{"id": 47, "name": "hans"}.Check(data)
+	err := MapIncluding{"id": 47, "name": "hans"}.Match(data)
 
 	if err != nil {
 		t.Fatal(err)
@@ -78,7 +78,7 @@ func TestMapIncluding_Success(t *testing.T) {
 func TestMapIncluding_Failure(t *testing.T) {
 	data := dataFromJSON(t, `{"id": 12}`)
 
-	err := MapIncluding{"id": 47, "name": "hans"}.Check(data)
+	err := MapIncluding{"id": 47, "name": "hans"}.Match(data)
 
 	if err == nil {
 		t.Fatal("expected error")

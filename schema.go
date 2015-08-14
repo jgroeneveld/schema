@@ -5,31 +5,31 @@ import (
 	"io"
 )
 
-type Checker interface {
-	Check(data interface{}) *Error
+type Matcher interface {
+	Match(data interface{}) *Error
 }
 
-func CheckerFunc(name string, fun func(data interface{}) *Error) *checkerFunc {
-	return &checkerFunc{
+func MatcherFunc(name string, fun func(data interface{}) *Error) *matcherFunc {
+	return &matcherFunc{
 		Name: name,
 		Fun:  fun,
 	}
 }
 
-// Check wraps checker.Check for nil error handling.
-func Check(checker Checker, data interface{}) error {
-	if err := checker.Check(data); err != nil {
+// Match wraps matcher.Match for nil error handling.
+func Match(m Matcher, data interface{}) error {
+	if err := m.Match(data); err != nil {
 		return err
 	}
 	return nil
 }
 
-// CheckJSON wraps Check with a reader for JSON raw data.
-func CheckJSON(checker Checker, r io.Reader) error {
+// MatchJSON wraps Match with a reader for JSON raw data.
+func MatchJSON(m Matcher, r io.Reader) error {
 	var data interface{}
 	if err := json.NewDecoder(r).Decode(&data); err != nil {
 		return err
 	}
 
-	return Check(checker, data)
+	return Match(m, data)
 }

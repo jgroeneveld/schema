@@ -3,7 +3,7 @@ package schema
 import "testing"
 
 func TestIsInteger_Success(t *testing.T) {
-	err := IsInteger.Check(12)
+	err := IsInteger.Match(12)
 
 	if err != nil {
 		t.Fatal(err)
@@ -11,7 +11,7 @@ func TestIsInteger_Success(t *testing.T) {
 }
 
 func TestIsInteger_Fail(t *testing.T) {
-	err := IsInteger.Check("12")
+	err := IsInteger.Match("12")
 
 	if err == nil {
 		t.Fatal("Expected error got none")
@@ -19,7 +19,7 @@ func TestIsInteger_Fail(t *testing.T) {
 }
 
 func TestIsString_Success(t *testing.T) {
-	err := IsString.Check("harald")
+	err := IsString.Match("harald")
 
 	if err != nil {
 		t.Fatal(err)
@@ -27,7 +27,7 @@ func TestIsString_Success(t *testing.T) {
 }
 
 func TestIsString_Fail(t *testing.T) {
-	err := IsString.Check(12)
+	err := IsString.Match(12)
 
 	if err == nil {
 		t.Fatal("Expected error got none")
@@ -35,19 +35,19 @@ func TestIsString_Fail(t *testing.T) {
 }
 
 func TestIsBool_Success(t *testing.T) {
-	err := IsBool.Check(true)
+	err := IsBool.Match(true)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = IsBool.Check(false)
+	err = IsBool.Match(false)
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestIsBool_Fail(t *testing.T) {
-	err := IsBool.Check("1")
+	err := IsBool.Match("1")
 
 	if err == nil {
 		t.Fatal("Expected error got none")
@@ -55,19 +55,19 @@ func TestIsBool_Fail(t *testing.T) {
 }
 
 func TestIsFloat_Success(t *testing.T) {
-	err := IsFloat.Check(12.42)
+	err := IsFloat.Match(12.42)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = IsFloat.Check(12)
+	err = IsFloat.Match(12)
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestIsFloat_Fail(t *testing.T) {
-	err := IsFloat.Check("12")
+	err := IsFloat.Match("12")
 
 	if err == nil {
 		t.Fatal("Expected error got none")
@@ -75,7 +75,7 @@ func TestIsFloat_Fail(t *testing.T) {
 }
 
 func TestIsPresent_Success(t *testing.T) {
-	err := IsPresent.Check("12")
+	err := IsPresent.Match("12")
 
 	if err != nil {
 		t.Fatal(err)
@@ -83,7 +83,7 @@ func TestIsPresent_Success(t *testing.T) {
 }
 
 func TestIsPresent_Fail(t *testing.T) {
-	err := IsPresent.Check(nil)
+	err := IsPresent.Match(nil)
 
 	if err != nil {
 		t.Fatal(err)
@@ -98,7 +98,7 @@ func TestIsPresent_MapSuccess(t *testing.T) {
 
 	err := Map{
 		"footsize": IsPresent,
-	}.Check(data)
+	}.Match(data)
 
 	if err != nil {
 		t.Fatal(err)
@@ -110,7 +110,7 @@ func TestIsPresent_MapFailure(t *testing.T) {
 
 	err := Map{
 		"footsize": IsPresent,
-	}.Check(data)
+	}.Match(data)
 
 	if err == nil {
 		t.Fatal("Expected error got none")

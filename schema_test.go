@@ -23,7 +23,7 @@ func TestFullSuccess(t *testing.T) {
 		"pi": [3,1,4,1,5,9,2,6,5,3,5,9]
 	}`)
 
-	err := Check(
+	err := Match(
 		Map{
 			"id":       IsInteger,
 			"name":     "Max Mustermann",
@@ -68,7 +68,7 @@ func TestNestingFailures(t *testing.T) {
 			},
 		},
 		"tags": Array("blue"),
-	}.Check(data) // explicitly call Check method to keep more elaborate errors without casting
+	}.Match(data) // explicitly call Match method to keep more elaborate errors without casting
 
 	if err == nil {
 		t.Fatal("expected error")

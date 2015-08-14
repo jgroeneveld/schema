@@ -6,8 +6,8 @@ import (
 	"strconv"
 )
 
-func Array(exps ...interface{}) Checker {
-	return CheckerFunc("Array", func(data interface{}) *Error {
+func Array(exps ...interface{}) Matcher {
+	return MatcherFunc("Array", func(data interface{}) *Error {
 		fieldError := &Error{}
 
 		dataArray, ok := data.([]interface{})
@@ -22,7 +22,7 @@ func Array(exps ...interface{}) Checker {
 		for i := 0; i < len(exps) && i < len(dataArray); i++ {
 			actual := dataArray[i]
 			exp := exps[i]
-			compareValue(fieldError, strconv.Itoa(i), exp, actual)
+			matchValue(fieldError, strconv.Itoa(i), exp, actual)
 		}
 
 		if fieldError.Any() {
@@ -32,8 +32,8 @@ func Array(exps ...interface{}) Checker {
 	})
 }
 
-func ArrayEach(exp interface{}) Checker {
-	return CheckerFunc("ArrayEach", func(data interface{}) *Error {
+func ArrayEach(exp interface{}) Matcher {
+	return MatcherFunc("ArrayEach", func(data interface{}) *Error {
 		fieldError := &Error{}
 
 		dataArray, ok := data.([]interface{})
@@ -43,7 +43,7 @@ func ArrayEach(exp interface{}) Checker {
 
 		for i := 0; i < len(dataArray); i++ {
 			actual := dataArray[i]
-			compareValue(fieldError, strconv.Itoa(i), exp, actual)
+			matchValue(fieldError, strconv.Itoa(i), exp, actual)
 		}
 
 		if fieldError.Any() {
@@ -53,8 +53,8 @@ func ArrayEach(exp interface{}) Checker {
 	})
 }
 
-func ArrayUnordered(exps ...interface{}) Checker {
-	return CheckerFunc("ArrayUnordered", func(data interface{}) *Error {
+func ArrayUnordered(exps ...interface{}) Matcher {
+	return MatcherFunc("ArrayUnordered", func(data interface{}) *Error {
 		fieldError := &Error{}
 
 		dataArray, ok := data.([]interface{})
@@ -86,8 +86,8 @@ func ArrayUnordered(exps ...interface{}) Checker {
 	})
 }
 
-func ArrayIncluding(exps ...interface{}) Checker {
-	return CheckerFunc("ArrayIncluding", func(data interface{}) *Error {
+func ArrayIncluding(exps ...interface{}) Matcher {
+	return MatcherFunc("ArrayIncluding", func(data interface{}) *Error {
 		dataArray, ok := data.([]interface{})
 		if !ok {
 			return SelfError(fmt.Sprintf("is no array: %t", data))
@@ -116,7 +116,7 @@ func arrayIncludingMatchedIndices(exps []interface{}, dataArray []interface{}) (
 				continue
 			}
 			e := &Error{}
-			compareValue(e, strconv.Itoa(i), exp.Exp, v)
+			matchValue(e, strconv.Itoa(i), exp.Exp, v)
 			if !e.Any() {
 				matchedIndices[i] = true
 				foundMatching = true
@@ -126,7 +126,7 @@ func arrayIncludingMatchedIndices(exps []interface{}, dataArray []interface{}) (
 
 		if !foundMatching {
 			switch t := exp.Exp.(type) {
-			case Checker:
+			case Matcher:
 				fieldError.Add(selfField, fmt.Sprintf("[%d] %s did not match", exp.OriginalIndex, t))
 			default:
 				fieldError.Add(selfField, fmt.Sprintf("[%d] %v:%T not included", exp.OriginalIndex, t, t))
@@ -168,7 +168,7 @@ func expPrio(a interface{}) int {
 	if a == IsPresent {
 		return 9
 	}
-	if _, isChecker := a.(Checker); isChecker {
+	if _, isMatcher := a.(Matcher); isMatcher {
 		return 8
 	}
 	return 0

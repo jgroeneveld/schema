@@ -4,20 +4,20 @@ import "fmt"
 
 const selfField = "."
 
-type checkerFunc struct {
+type matcherFunc struct {
 	Name string
 	Fun  func(data interface{}) *Error
 }
 
-func (f *checkerFunc) Check(data interface{}) *Error {
+func (f *matcherFunc) Match(data interface{}) *Error {
 	return f.Fun(data)
 }
 
-func (f *checkerFunc) String() string {
+func (f *matcherFunc) String() string {
 	return f.Name
 }
 
-func compareValue(fieldError *Error, k string, rawExp interface{}, rawActual interface{}) error {
+func matchValue(fieldError *Error, k string, rawExp interface{}, rawActual interface{}) error {
 	switch exp := rawExp.(type) {
 	case int:
 		switch actual := rawActual.(type) {
@@ -40,12 +40,12 @@ func compareValue(fieldError *Error, k string, rawExp interface{}, rawActual int
 		if actual, ok := rawActual.(bool); !ok || actual != exp {
 			fieldError.Add(k, fmt.Sprintf("%#v != %#v", rawActual, exp))
 		}
-	case Checker:
-		if err := exp.Check(rawActual); err != nil {
+	case Matcher:
+		if err := exp.Match(rawActual); err != nil {
 			fieldError.Merge(k, err)
 		}
 	default:
-		panic("unknown type to check")
+		panic("unknown type to match")
 	}
 
 	return nil

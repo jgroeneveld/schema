@@ -5,7 +5,7 @@ import "testing"
 func TestArray_Success(t *testing.T) {
 	data := dataFromJSON(t, `["red", "blue", 12, "something_inbetween_we_dont_care_about", true]`)
 
-	err := Array("red", IsString, 12, IsPresent, true).Check(data)
+	err := Array("red", IsString, 12, IsPresent, true).Match(data)
 
 	if err != nil {
 		t.Fatal(err)
@@ -15,7 +15,7 @@ func TestArray_Success(t *testing.T) {
 func TestArray_WrongOrder(t *testing.T) {
 	data := dataFromJSON(t, `["red", "blue"]`)
 
-	err := Array("blue", "red").Check(data)
+	err := Array("blue", "red").Match(data)
 
 	if err == nil {
 		t.Fatal("expected error")
@@ -31,7 +31,7 @@ func TestArray_WrongOrder(t *testing.T) {
 
 func TestArray_ExtraElements(t *testing.T) {
 	data := dataFromJSON(t, `["red", "blue", "yellow"]`)
-	err := Array("red", "blue").Check(data)
+	err := Array("red", "blue").Match(data)
 
 	if err == nil {
 		t.Fatal("expected error")
@@ -43,7 +43,7 @@ func TestArray_ExtraElements(t *testing.T) {
 
 func TestArray_MissingElements(t *testing.T) {
 	data := dataFromJSON(t, `["red", "blue"]`)
-	err := Array("red", "blue", "yellow").Check(data)
+	err := Array("red", "blue", "yellow").Match(data)
 
 	if err == nil {
 		t.Fatal("expected error")
@@ -56,7 +56,7 @@ func TestArray_MissingElements(t *testing.T) {
 func TestArrayEach_Success(t *testing.T) {
 	data := dataFromJSON(t, `["red", "blue"]`)
 
-	err := ArrayEach(IsString).Check(data)
+	err := ArrayEach(IsString).Match(data)
 
 	if err != nil {
 		t.Fatal(err)
@@ -66,7 +66,7 @@ func TestArrayEach_Success(t *testing.T) {
 func TestArrayEach_Failure(t *testing.T) {
 	data := dataFromJSON(t, `["red", 1]`)
 
-	err := ArrayEach(IsString).Check(data)
+	err := ArrayEach(IsString).Match(data)
 
 	if err == nil {
 		t.Fatal("expected error")
@@ -79,7 +79,7 @@ func TestArrayEach_Failure(t *testing.T) {
 func TestArrayIncluding_Success(t *testing.T) {
 	data := dataFromJSON(t, `["red", "blue", 12, {"a": 1}]`)
 
-	err := ArrayIncluding(IsInteger, Map{"a": IsInteger}, "red").Check(data)
+	err := ArrayIncluding(IsInteger, Map{"a": IsInteger}, "red").Match(data)
 
 	if err != nil {
 		t.Fatal(err)
@@ -89,7 +89,7 @@ func TestArrayIncluding_Success(t *testing.T) {
 func TestArrayIncluding_Failure(t *testing.T) {
 	data := dataFromJSON(t, `["red", "blue", {"a": 1}]`)
 
-	err := ArrayIncluding(IsInteger, "green", Map{"a": IsInteger}, "red").Check(data)
+	err := ArrayIncluding(IsInteger, "green", Map{"a": IsInteger}, "red").Match(data)
 
 	if err == nil {
 		t.Fatal("expected error")
@@ -100,10 +100,10 @@ func TestArrayIncluding_Failure(t *testing.T) {
 	}
 }
 
-func TestArrayIncluding_CheckerPrio(t *testing.T) {
+func TestArrayIncluding_MatcherPrio(t *testing.T) {
 	data := dataFromJSON(t, `[ 1,2,3,4,5,6 ]`)
 
-	err := ArrayIncluding(IsPresent, IsInteger, 1, 2).Check(data)
+	err := ArrayIncluding(IsPresent, IsInteger, 1, 2).Match(data)
 
 	if err != nil {
 		t.Fatal(err)
@@ -113,7 +113,7 @@ func TestArrayIncluding_CheckerPrio(t *testing.T) {
 func TestArrayUnordered_Success(t *testing.T) {
 	data := dataFromJSON(t, `["red", 12, {"a": 1}]`)
 
-	err := ArrayUnordered(IsInteger, Map{"a": IsInteger}, "red").Check(data)
+	err := ArrayUnordered(IsInteger, Map{"a": IsInteger}, "red").Match(data)
 
 	if err != nil {
 		t.Fatal(err)
@@ -123,7 +123,7 @@ func TestArrayUnordered_Success(t *testing.T) {
 func TestArrayUnordered_ExtraElements(t *testing.T) {
 	data := dataFromJSON(t, `["red", 12, 42, {"a": 1}]`)
 
-	err := ArrayUnordered(IsInteger, Map{"a": IsInteger}, "red").Check(data)
+	err := ArrayUnordered(IsInteger, Map{"a": IsInteger}, "red").Match(data)
 
 	if err == nil {
 		t.Fatal("expected error")
@@ -139,7 +139,7 @@ func TestArrayUnordered_ExtraElements(t *testing.T) {
 func TestArrayUnordered_MissingElement(t *testing.T) {
 	data := dataFromJSON(t, `[12, {"a": 1}]`)
 
-	err := ArrayUnordered(IsInteger, Map{"a": IsInteger}, "red").Check(data)
+	err := ArrayUnordered(IsInteger, Map{"a": IsInteger}, "red").Match(data)
 
 	if err == nil {
 		t.Fatal("expected error")

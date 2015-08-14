@@ -7,7 +7,7 @@ import (
 
 type Map map[string]interface{}
 
-func (m Map) Check(data interface{}) *Error {
+func (m Map) Match(data interface{}) *Error {
 	fieldError := &Error{}
 
 	dataMap, ok := data.(map[string]interface{})
@@ -17,7 +17,7 @@ func (m Map) Check(data interface{}) *Error {
 
 	checkExtraKeys(fieldError, m, dataMap)
 	checkMissingKeys(fieldError, m, dataMap)
-	checkValues(fieldError, m, dataMap)
+	matchValues(fieldError, m, dataMap)
 
 	if fieldError.Any() {
 		return fieldError
@@ -27,7 +27,7 @@ func (m Map) Check(data interface{}) *Error {
 
 type MapIncluding map[string]interface{}
 
-func (m MapIncluding) Check(data interface{}) *Error {
+func (m MapIncluding) Match(data interface{}) *Error {
 	fieldError := &Error{}
 
 	dataMap, ok := data.(map[string]interface{})
@@ -36,7 +36,7 @@ func (m MapIncluding) Check(data interface{}) *Error {
 	}
 
 	checkMissingKeys(fieldError, m, dataMap)
-	checkValues(fieldError, m, dataMap)
+	matchValues(fieldError, m, dataMap)
 
 	if fieldError.Any() {
 		return fieldError
@@ -68,12 +68,12 @@ func checkMissingKeys(fieldError *Error, m map[string]interface{}, dataMap map[s
 	}
 }
 
-func checkValues(fieldError *Error, m map[string]interface{}, dataMap map[string]interface{}) {
+func matchValues(fieldError *Error, m map[string]interface{}, dataMap map[string]interface{}) {
 	for k, exp := range m {
 		actual, found := dataMap[k]
 		if !found {
 			continue
 		}
-		compareValue(fieldError, k, exp, actual)
+		matchValue(fieldError, k, exp, actual)
 	}
 }
