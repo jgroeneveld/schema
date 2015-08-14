@@ -66,3 +66,4 @@
 
 - TODO document writing own matchers
 - TODO document all existing matchers
+- TODO change format of array index errors "users.0.age" -> "users[0].age"

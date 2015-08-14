@@ -127,9 +127,9 @@ func arrayIncludingMatchedIndices(exps []interface{}, dataArray []interface{}) (
 		if !foundMatching {
 			switch t := exp.Exp.(type) {
 			case Matcher:
-				fieldError.Add(selfField, fmt.Sprintf("[%d] %s did not match", exp.OriginalIndex, t))
+				fieldError.Add(selfField, fmt.Sprintf("%s(%d) did not match", t, exp.OriginalIndex))
 			default:
-				fieldError.Add(selfField, fmt.Sprintf("[%d] %v:%T not included", exp.OriginalIndex, t, t))
+				fieldError.Add(selfField, fmt.Sprintf("%v:%T(%d) not included", t, t, exp.OriginalIndex))
 			}
 		}
 	}
