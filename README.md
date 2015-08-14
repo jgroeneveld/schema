@@ -124,6 +124,27 @@ var IsTime = schema.MatcherFunc("IsTime",
     },
 )
 ```
+
+To be more generic with regard to the time format the following pattern can be used:
+
+```go
+func IsTime (format string) schema.Matcher
+	return schema.MatcherFunc("IsTime",
+		func(data interface{}) *schema.Error {
+			s, ok := data.(string)
+			if !ok {
+				return schema.SelfError("is no valid time: not a string")
+			}
+
+			_, err := time.Parse(format, s)
+			if err != nil {
+				return schema.SelfError("is no valid time: " + err.Error())
+			}
+			return nil
+		},
+	)
+}
+```
     
 ## Issues
 
