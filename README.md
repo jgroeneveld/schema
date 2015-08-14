@@ -40,3 +40,6 @@
 
 - TODO document number issue
 - TODO document ArrayIncluding/ArrayUnordered issue with complex matchers
+
+- TODO document writing own matchers
+- TODO document all existing matchers
