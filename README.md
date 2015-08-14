@@ -4,6 +4,60 @@
 
 The initial version was built during a [Dynport](https://github.com/dynport) hackday by [gfrey](https://github.com/gfrey) and [jgroenveld](https://github.com/jgroeneveld). It was inspired by [chancancode/json_expressions](https://github.com/chancancode/json_expressions)
 
+## Example
+
+[example_test.go](example_test.go)
+```go
+func TestJSON(t *testing.T) {
+    reader := getJSONResponse()
+
+    err := schema.MatchJSON(
+        schema.Map{
+            "id":       schema.IsInteger,
+            "name":     "Max Mustermann",
+            "age":      42,
+            "height":   schema.IsFloat,
+            "footsize": schema.IsPresent,
+            "address": schema.Map{
+                "street": schema.IsString,
+                "zip":    schema.IsString,
+            },
+            "tags": schema.ArrayIncluding("red"),
+        },
+        reader,
+    )
+
+    if err != nil {
+        t.Fatal(err)
+    }
+}
+```
+
+### JSON Input
+
+```json
+{
+    "id": 12,
+    "name": "Hans Meier",
+    "age": 42,
+    "height": 1.91,
+    "address": {
+        "street": 12
+    },
+    "tags": ["blue", "green"]
+}
+```
+    
+### err.Error() Output
+
+```
+"address": Missing keys: "zip"
+"address.street": is no string but float64
+"name": "Hans Meier" != "Max Mustermann"
+"tags": red:string(0) not included
+Missing keys: "footsize"
+```
+
 ## Entry Points
 
 ```go
@@ -46,60 +100,6 @@ schema.MatchJSON(schema.Matcher, io.Reader) error
     ArrayEach
         Each element of the array has to match the given matcher.
 
-## Example
-
-[example_test.go](example_test.go)
-```go
-func TestJSON(t *testing.T) {
-    reader := getJSONResponse()
-
-    err := schema.MatchJSON(
-        schema.Map{
-            "id":       schema.IsInteger,
-            "name":     "Max Mustermann",
-            "age":      42,
-            "height":   schema.IsFloat,
-            "footsize": schema.IsPresent,
-            "address": schema.Map{
-                "street": schema.IsString,
-                "zip":    schema.IsString,
-            },
-            "tags": schema.ArrayIncluding("red"),
-        },
-        reader,
-    )
-
-    if err != nil {
-        t.Fatal(err)
-    }
-}
-```
-
-### Input
-
-```json
-{
-    "id": 12,
-    "name": "Hans Meier",
-    "age": 42,
-    "height": 1.91,
-    "address": {
-        "street": 12
-    },
-    "tags": ["blue", "green"]
-}
-```
-    
-### err.Error()
-
-```
-"address": Missing keys: "zip"
-"address.street": is no string but float64
-"name": "Hans Meier" != "Max Mustermann"
-"tags": red:string(0) not included
-Missing keys: "footsize"
-```
-
 ## How to write matchers
 
 To use custom or more specialized matchers, the [schema.Matcher](schema.go#L9) interface needs to be implemented.
@@ -126,8 +126,6 @@ var IsTime = schema.MatcherFunc("IsTime",
 ```
     
 ## Issues
-
-- TODO sort errors in schema.Match
 
 - TODO document number issue
 - TODO document ArrayIncluding/ArrayUnordered issue with complex matchers
