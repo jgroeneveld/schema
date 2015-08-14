@@ -45,7 +45,9 @@ func matchValue(fieldError *Error, k string, rawExp interface{}, rawActual inter
 			fieldError.Merge(k, err)
 		}
 	default:
-		panic("unknown type to match")
+		if rawExp != rawActual {
+			fieldError.Add(k, fmt.Sprintf("%#v != %#v", rawActual, exp))
+		}
 	}
 
 	return nil
