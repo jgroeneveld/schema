@@ -4,17 +4,6 @@ import "fmt"
 
 const selfField = "."
 
-type Checker interface {
-	Check(data interface{}) *Error
-}
-
-func CheckerFunc(name string, fun func(data interface{}) *Error) *checkerFunc {
-	return &checkerFunc{
-		Name: name,
-		Fun:  fun,
-	}
-}
-
 type checkerFunc struct {
 	Name string
 	Fun  func(data interface{}) *Error

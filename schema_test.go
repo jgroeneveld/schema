@@ -23,22 +23,25 @@ func TestFullSuccess(t *testing.T) {
 		"pi": [3,1,4,1,5,9,2,6,5,3,5,9]
 	}`)
 
-	err := Map{
-		"id":       IsInteger,
-		"name":     "Max Mustermann",
-		"age":      42,
-		"admin":    IsBool,
-		"height":   IsFloat,
-		"footsize": IsPresent,
-		"address": Map{
-			"street":  IsString,
-			"zip":     IsString,
-			"country": IsString,
+	err := Check(
+		Map{
+			"id":       IsInteger,
+			"name":     "Max Mustermann",
+			"age":      42,
+			"admin":    IsBool,
+			"height":   IsFloat,
+			"footsize": IsPresent,
+			"address": Map{
+				"street":  IsString,
+				"zip":     IsString,
+				"country": IsString,
+			},
+			"tags":    Array("blue", "red"),
+			"friends": ArrayIncluding("hans"),
+			"pi":      ArrayEach(IsInteger),
 		},
-		"tags":    Array("blue", "red"),
-		"friends": ArrayIncluding("hans"),
-		"pi":      ArrayEach(IsInteger),
-	}.Check(data)
+		data,
+	)
 
 	if err != nil {
 		t.Fatal(err)
@@ -65,7 +68,7 @@ func TestNestingFailures(t *testing.T) {
 			},
 		},
 		"tags": Array("blue"),
-	}.Check(data)
+	}.Check(data) // explicitly call Check method to keep more elaborate errors without casting
 
 	if err == nil {
 		t.Fatal("expected error")
