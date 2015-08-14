@@ -150,11 +150,27 @@ func IsTime (format string) schema.Matcher
 	)
 }
 ```
+
+## Ideas
+
+- write Optional(Matcher) that matches if key is missing or given matcher is satisfied
+- write Combine(...Matcher) that matches if all given matchers are satisfied
+
+
     
 ## Issues
 
-- TODO document number issue
-- TODO document ArrayIncluding/ArrayUnordered issue with complex matchers
+**Numbers**
 
-- TODO write Optional(Matcher)
-- TODO write Combine(...Matcher)
+JSON does not differ between integers and floats, ie. there are only numbers. This is why the go JSON library will always return a `float64` value if no type was specified (unmarshalling into an `interface{}` type). This requires some magic internally and can result in false positives. For very large or small integers errors could occur due to rounding errors. If something has no fractional value it is assumed to be equal to an integer (42.0 == 42).
+
+
+**Array Matchers**
+
+For arrays there are matcher variants for including and unordered. They take the following steps:
+
+* Order the given matchers, where concrete values are matched first, then all matchers except the most generic `IsPresent`, and finally all `IsPresent` matchers. This order guarantees that the most specific values are matched first.
+* For each of the ordered matchers, verify one of the remaining values matches.
+* Keep a log of all matched values.
+
+This will work in most of the cases, but might fail for some weird nested structures where something like a backtracking approach would be required. 
