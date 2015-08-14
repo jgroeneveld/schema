@@ -1,3 +1,6 @@
+// schema makes it easier to check if map/array structures match a certain schema. Great for testing JSON API's.
+//
+// For examples see https://github.com/jgroeneveld/schema/blob/master/README.md
 package schema
 
 import (

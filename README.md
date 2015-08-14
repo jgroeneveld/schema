@@ -13,9 +13,8 @@ The initial version was built during a [Dynport](https://github.com/dynport) hac
  
 ## Example
 
+[example_test.go](example_test.go)
 ```go
-// example_test.go
-
 func TestJSON(t *testing.T) {
     reader := getJSONResponse()
 
