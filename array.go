@@ -3,7 +3,7 @@ package schema
 import (
 	"fmt"
 	"sort"
-	"strconv"
+	"strings"
 )
 
 func Array(exps ...interface{}) Matcher {
@@ -22,7 +22,7 @@ func Array(exps ...interface{}) Matcher {
 		for i := 0; i < len(exps) && i < len(dataArray); i++ {
 			actual := dataArray[i]
 			exp := exps[i]
-			matchValue(fieldError, strconv.Itoa(i), exp, actual)
+			matchValue(fieldError, errorIdxField(i), exp, actual)
 		}
 
 		if fieldError.Any() {
@@ -43,7 +43,7 @@ func ArrayEach(exp interface{}) Matcher {
 
 		for i := 0; i < len(dataArray); i++ {
 			actual := dataArray[i]
-			matchValue(fieldError, strconv.Itoa(i), exp, actual)
+			matchValue(fieldError, errorIdxField(i), exp, actual)
 		}
 
 		if fieldError.Any() {
@@ -74,7 +74,7 @@ func ArrayUnordered(exps ...interface{}) Matcher {
 		if len(matchedIndices) != len(dataArray) {
 			for i := 0; i < len(dataArray); i++ {
 				if !matchedIndices[i] {
-					fieldError.Add(strconv.Itoa(i), "unmatched")
+					fieldError.Add(errorIdxField(i), "unmatched")
 				}
 			}
 		}
@@ -116,7 +116,7 @@ func arrayIncludingMatchedIndices(exps []interface{}, dataArray []interface{}) (
 				continue
 			}
 			e := &Error{}
-			matchValue(e, strconv.Itoa(i), exp.Exp, v)
+			matchValue(e, errorIdxField(i), exp.Exp, v)
 			if !e.Any() {
 				matchedIndices[i] = true
 				foundMatching = true
@@ -172,4 +172,12 @@ func expPrio(a interface{}) int {
 		return 8
 	}
 	return 0
+}
+
+func errorIdxField(i int) string {
+	return fmt.Sprintf("[%d]", i)
+}
+
+func isErrorIdxField(f string) bool {
+	return strings.HasPrefix(f, "[") && strings.HasSuffix(f, "]")
 }

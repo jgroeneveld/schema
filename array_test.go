@@ -21,11 +21,11 @@ func TestArray_WrongOrder(t *testing.T) {
 		t.Fatal("expected error")
 	}
 
-	if err.Errors["0"] != `"red" != "blue"` {
-		t.Fatalf("wrong error msg: %s", err.Errors["0"])
+	if err.Errors["[0]"] != `"red" != "blue"` {
+		t.Fatalf("wrong error msg: %s", err.Errors["[0]"])
 	}
-	if err.Errors["1"] != `"blue" != "red"` {
-		t.Fatalf("wrong error msg: %s", err.Errors["1"])
+	if err.Errors["[1]"] != `"blue" != "red"` {
+		t.Fatalf("wrong error msg: %s", err.Errors["[1]"])
 	}
 }
 
@@ -71,8 +71,8 @@ func TestArrayEach_Failure(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error")
 	}
-	if err.Errors["1"] != `is no string but float64` {
-		t.Fatalf("wrong error msg: %s", err.Errors["1"])
+	if err.Errors["[1]"] != `is no string but float64` {
+		t.Fatalf("wrong error msg: %s", err.Errors["[1]"])
 	}
 }
 
@@ -131,8 +131,8 @@ func TestArrayUnordered_ExtraElements(t *testing.T) {
 	if err.Errors[selfField] != `length does not match 4 != 3` {
 		t.Fatalf("wrong error msg: %s", err.Errors[selfField])
 	}
-	if err.Errors["2"] != `unmatched` {
-		t.Fatalf("wrong error msg: %s", err.Errors["2"])
+	if err.Errors["[2]"] != `unmatched` {
+		t.Fatalf("wrong error msg: %s", err.Errors["[2]"])
 	}
 }
 

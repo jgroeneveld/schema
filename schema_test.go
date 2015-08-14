@@ -86,7 +86,7 @@ func TestNestingFailures(t *testing.T) {
 	if err.Errors["address.geo.lat"] != `"-" != "12"` {
 		t.Errorf(`wrong error on "address.geo.lat": %s`, err.Errors["address.geo.lat"])
 	}
-	if err.Errors["tags.0"] != `"-" != "blue"` {
-		t.Errorf(`wrong error on "tags.0": %s`, err.Errors["tags.0"])
+	if err.Errors["tags[0]"] != `"-" != "blue"` {
+		t.Errorf(`wrong error on "tags[0]": %s`, err.Errors["tags[0]"])
 	}
 }
