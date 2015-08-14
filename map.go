@@ -2,6 +2,7 @@ package schema
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -52,6 +53,7 @@ func checkExtraKeys(fieldError *Error, m map[string]interface{}, dataMap map[str
 		}
 	}
 	if len(extraKeys) > 0 {
+		sort.Strings(extraKeys)
 		fieldError.Add(selfField, fmt.Sprintf("Found extra keys: %q", strings.Join(extraKeys, ", ")))
 	}
 }
@@ -64,6 +66,7 @@ func checkMissingKeys(fieldError *Error, m map[string]interface{}, dataMap map[s
 		}
 	}
 	if len(missingKeys) > 0 {
+		sort.Strings(missingKeys)
 		fieldError.Add(selfField, fmt.Sprintf("Missing keys: %q", strings.Join(missingKeys, ", ")))
 	}
 }

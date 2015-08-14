@@ -93,11 +93,11 @@ func TestJSON(t *testing.T) {
 ### err.Error()
 
 ```
+"address": Missing keys: "zip"
 "address.street": is no string but float64
+"name": "Hans Meier" != "Max Mustermann"
 "tags": red:string(0) not included
 Missing keys: "footsize"
-"name": "Hans Meier" != "Max Mustermann"
-"address": Missing keys: "zip"
 ```
 
 ## How to write matchers

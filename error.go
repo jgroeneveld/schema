@@ -2,6 +2,7 @@ package schema
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -33,6 +34,7 @@ func (e *Error) Error() string {
 		}
 
 	}
+	sort.Strings(msgs)
 	return strings.Join(msgs, "\n")
 }
 

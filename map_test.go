@@ -28,7 +28,7 @@ func TestMap_ExtraKeys(t *testing.T) {
 		t.Fatal("Expected error got none")
 	}
 	// check twice because of non-deterministic order of keys
-	if err.Errors[selfField] != `Found extra keys: "hans, wurst"` && err.Errors[selfField] != `Found extra keys: "wurst, hans"` {
+	if err.Errors[selfField] != `Found extra keys: "hans, wurst"` {
 		t.Fatalf("wrong error msg: %s", err.Error())
 	}
 }
