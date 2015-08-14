@@ -2,7 +2,7 @@
 
 **schema** makes it easier to check if map/array structures match a certain schema. Great for testing JSON API's.
 
-The initial version was built during a [Dynport](https://github.com/dynport) hackday by [gfrey](https://github.com/gfrey) and [jgroenveld](https://github.com/jgroeneveld) and was inspired by [chancancode/json_expressions](https://github.com/chancancode/json_expressions)
+The initial version was built during a [Dynport](https://github.com/dynport) hackday by [gfrey](https://github.com/gfrey) and [jgroenveld](https://github.com/jgroeneveld). It was inspired by [chancancode/json_expressions](https://github.com/chancancode/json_expressions)
 
 ## Matchers
 
