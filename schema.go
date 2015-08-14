@@ -2,6 +2,7 @@ package schema
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 )
 
@@ -28,7 +29,7 @@ func Match(m Matcher, data interface{}) error {
 func MatchJSON(m Matcher, r io.Reader) error {
 	var data interface{}
 	if err := json.NewDecoder(r).Decode(&data); err != nil {
-		return err
+		return fmt.Errorf("cant parse JSON: %s", err.Error())
 	}
 
 	return Match(m, data)
