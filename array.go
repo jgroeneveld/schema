@@ -127,9 +127,9 @@ func arrayIncludingMatchedIndices(exps []interface{}, dataArray []interface{}) (
 		if !foundMatching {
 			switch t := exp.Exp.(type) {
 			case Matcher:
-				fieldError.Add(selfField, fmt.Sprintf("%s(%d) did not match", t, exp.OriginalIndex))
+				fieldError.Add(selfField, fmt.Sprintf("%s<%d> did not match", t, exp.OriginalIndex))
 			default:
-				fieldError.Add(selfField, fmt.Sprintf("%v:%T(%d) not included", t, t, exp.OriginalIndex))
+				fieldError.Add(selfField, fmt.Sprintf("%v:%T<%d> not included", t, t, exp.OriginalIndex))
 			}
 		}
 	}
@@ -165,10 +165,16 @@ func (exps sortableExps) Less(i, j int) bool {
 }
 
 func expPrio(a interface{}) int {
-	if a == IsPresent {
+	_, isGenericMatcher := a.(Matcher)
+	_, isCaptureMatcher := a.(CaptureMatcher)
+
+	// order is relevant
+	switch {
+	case a == IsPresent:
 		return 9
-	}
-	if _, isMatcher := a.(Matcher); isMatcher {
+	case isCaptureMatcher:
+		return 7
+	case isGenericMatcher:
 		return 8
 	}
 	return 0

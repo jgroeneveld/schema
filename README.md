@@ -81,24 +81,29 @@ schema.MatchJSON(schema.Matcher, io.Reader) error
         - IsFloat
         - IsBool
 
-    Map
+    Map{"key":Matcher, ...}
         Matches maps where all given keys and values have to match. 
         No extra or missing keys allowed.
 
-    MapIncluding
+    MapIncluding{"key":Matcher, ...}
         Matches maps but only checks the given keys and values and ignores extra ones.
 
-    Array
+    Array(Matcher...)
         Matches all array elements in order.
 
-    ArrayUnordered
+    ArrayUnordered(Matcher...)
         Matches all array elements but order is ignored.
 
-    ArrayIncluding
+    ArrayIncluding(Matcher...)
         Reports elements that can not be matched.
 
-    ArrayEach
+    ArrayEach(Matcher)
         Each element of the array has to match the given matcher.
+        
+    Capture(name)
+        Can be used once or more to capture values and to make sure a value stays the same 
+        if it occurs multiple times in a schema. See [capture_test.go](capture_test.go).
+        Can also be used to use the captured value in future operations (e.g. multiple requests with the same id).
 
 ## How to write matchers
 
@@ -150,3 +155,6 @@ func IsTime (format string) schema.Matcher
 
 - TODO document number issue
 - TODO document ArrayIncluding/ArrayUnordered issue with complex matchers
+
+- TODO write Optional(Matcher)
+- TODO write Combine(...Matcher)

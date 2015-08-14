@@ -94,7 +94,7 @@ func TestArrayIncluding_Failure(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error")
 	}
-	if err.Errors[selfField] != `green:string(1) not included, IsInteger(0) did not match` {
+	if err.Errors[selfField] != `green:string<1> not included, IsInteger<0> did not match` {
 		t.Fatalf("wrong error msg: %s", err.Errors[selfField])
 	}
 }
@@ -143,7 +143,7 @@ func TestArrayUnordered_MissingElement(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error")
 	}
-	if err.Errors[selfField] != `length does not match 2 != 3, red:string(2) not included` {
+	if err.Errors[selfField] != `length does not match 2 != 3, red:string<2> not included` {
 		t.Fatalf("wrong error msg: %s", err.Errors[selfField])
 	}
 }

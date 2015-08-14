@@ -72,11 +72,25 @@ func checkMissingKeys(fieldError *Error, m map[string]interface{}, dataMap map[s
 }
 
 func matchValues(fieldError *Error, m map[string]interface{}, dataMap map[string]interface{}) {
+	keys := []string{}
+	exps := sortableExps{}
+
+	i := 0
 	for k, exp := range m {
+		keys = append(keys, k)
+		exps = append(exps, &origExp{OriginalIndex: i, Exp: exp})
+		i++
+	}
+
+	sort.Sort(exps)
+
+	for _, exp := range exps {
+		k := keys[exp.OriginalIndex]
+
 		actual, found := dataMap[k]
 		if !found {
 			continue
 		}
-		matchValue(fieldError, k, exp, actual)
+		matchValue(fieldError, k, exp.Exp, actual)
 	}
 }
