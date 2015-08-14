@@ -33,7 +33,7 @@ func TestJSON(t *testing.T) {
 }
 ```
 
-### JSON Input
+**JSON Input**
 
 ```json
 {
@@ -48,7 +48,7 @@ func TestJSON(t *testing.T) {
 }
 ```
     
-### err.Error() Output
+**err.Error() Output**
 
 ```
 "address": Missing keys: "zip"
