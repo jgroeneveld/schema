@@ -9,32 +9,55 @@
 - Map, MapIncluding
 - Array, ArrayUnordered, ArrayIncluding, ArrayEach
  
-## How to use
+## Example
 
-    // my_test.go
+    // example_test.go
     
     func TestJSON(t *testing.T) {
-        jsonData := getJSON()
-        
-        var data interface{}
-        err := json.Unmarshal(jsonData, &data)
-        if err != nil {
-            t.Fatal(err)
-        }
-        
-        err := schema.Map{
-            "id": schema.IsInteger,
-            "name": "Max Mustermann",
-            "age": 42,
-            "height": schema.IsFloat,
-            "footsize": schema.IsPresent,
-        }.Match(data)
-        
+        reader := getJSONResponse()
+    
+        err := schema.MatchJSON(
+            schema.Map{
+                "id":       schema.IsInteger,
+                "name":     "Max Mustermann",
+                "age":      42,
+                "height":   schema.IsFloat,
+                "footsize": schema.IsPresent,
+                "address": schema.Map{
+                    "street": schema.IsString,
+                    "zip":    schema.IsString,
+                },
+                "tags": schema.ArrayIncluding("red"),
+            },
+            reader,
+        )
+    
         if err != nil {
             t.Fatal(err)
         }
     }
     
+### Input
+
+    {
+		"id": 12,
+		"name": "Hans Meier",
+		"age": 42,
+		"height": 1.91,
+		"address": {
+			"street": 12
+		},
+		"tags": ["blue", "green"]
+    }
+    
+    
+### err.Error()
+
+    "address.street": is no string but float64
+    "tags": red:string(0) not included
+    Missing keys: "footsize"
+    "name": "Hans Meier" != "Max Mustermann"
+    "address": Missing keys: "zip"
     
 # Issues
 
