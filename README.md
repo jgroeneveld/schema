@@ -28,7 +28,8 @@ schema.MatchJSON(schema.Matcher, io.Reader) error
         - IsBool
 
     Map
-        Matches maps where all given keys and values have to match. No extra or missing keys allowed.
+        Matches maps where all given keys and values have to match. 
+        No extra or missing keys allowed.
 
     MapIncluding
         Matches maps but only checks the given keys and values and ignores extra ones.
