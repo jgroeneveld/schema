@@ -102,7 +102,7 @@ schema.MatchJSON(schema.Matcher, io.Reader) error
 
 ## How to write matchers
 
-To use custom or more specialized matchers, the [schema.Matcher](schema.go#L9) interface needs to be implemented.
+To use custom or more specialized matchers, the [schema.Matcher](schema.go#L12) interface needs to be implemented.
 Either via struct or by using `schema.MatcherFunc`
 
 To report errors, `schema.SelfError(message)` needs to be used if the `data` itself is the problem.
