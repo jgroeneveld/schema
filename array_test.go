@@ -94,7 +94,6 @@ func TestArrayIncluding_Failure(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error")
 	}
-	// TODO make order of errors better
 	if err.Errors[selfField] != `green:string(1) not included, IsInteger(0) did not match` {
 		t.Fatalf("wrong error msg: %s", err.Errors[selfField])
 	}
