@@ -80,6 +80,7 @@ schema.MatchJSON(schema.Matcher, io.Reader) error
         - IsInt
         - IsFloat
         - IsBool
+        - IsTime(format)
 
     Map{"key":Matcher, ...}
         Matches maps where all given keys and values have to match. 
@@ -104,6 +105,8 @@ schema.MatchJSON(schema.Matcher, io.Reader) error
         Can be used once or more to capture values and to make sure a value stays the same 
         if it occurs multiple times in a schema. See [capture_test.go](capture_test.go).
         Can also be used to use the captured value in future operations (e.g. multiple requests with the same id).
+        
+    StringEnum(...values)
 
 ## How to write matchers
 
