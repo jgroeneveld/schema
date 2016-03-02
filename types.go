@@ -1,6 +1,9 @@
 package schema
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 var IsInteger = MatcherFunc("IsInteger", isInteger)
 
@@ -53,4 +56,21 @@ var IsPresent = MatcherFunc("IsPresent", isPresent)
 func isPresent(data interface{}) *Error {
 	// Map is checking this implicitly, we only need to be called
 	return nil
+}
+
+func IsTime(format string) Matcher {
+	return MatcherFunc("IsTime",
+		func(data interface{}) *Error {
+			s, ok := data.(string)
+			if !ok {
+				return SelfError("is no valid time: not a string")
+			}
+
+			_, err := time.Parse(format, s)
+			if err != nil {
+				return SelfError("is no valid time: " + err.Error())
+			}
+			return nil
+		},
+	)
 }

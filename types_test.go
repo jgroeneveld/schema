@@ -1,6 +1,9 @@
 package schema
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestIsInteger_Success(t *testing.T) {
 	err := IsInteger.Match(12)
@@ -111,6 +114,22 @@ func TestIsPresent_MapFailure(t *testing.T) {
 	err := Map{
 		"footsize": IsPresent,
 	}.Match(data)
+
+	if err == nil {
+		t.Fatal("Expected error got none")
+	}
+}
+
+func TestIsTime_Success(t *testing.T) {
+	err := IsTime(time.RFC3339).Match("2016-02-28T12:42:00Z")
+
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestIsTime_Fail(t *testing.T) {
+	err := IsTime(time.RFC3339).Match("12")
 
 	if err == nil {
 		t.Fatal("Expected error got none")
