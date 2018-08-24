@@ -4,16 +4,18 @@ import "fmt"
 
 const selfField = "."
 
-type matcherFunc struct {
+// MatcherFuncImpl is a wrapper for a function to obey the Matcher interface
+type MatcherFuncImpl struct {
 	Name string
 	Fun  func(data interface{}) *Error
 }
 
-func (f *matcherFunc) Match(data interface{}) *Error {
+// Match is the actual matching function
+func (f *MatcherFuncImpl) Match(data interface{}) *Error {
 	return f.Fun(data)
 }
 
-func (f *matcherFunc) String() string {
+func (f *MatcherFuncImpl) String() string {
 	return f.Name
 }
 

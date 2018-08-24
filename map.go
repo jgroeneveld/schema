@@ -6,8 +6,11 @@ import (
 	"strings"
 )
 
+// Map checks each key for a specific value or matcher.
+//
 type Map map[string]interface{}
 
+// Match is the actual matching function to obey the Matcher Interface
 func (m Map) Match(data interface{}) *Error {
 	fieldError := &Error{}
 
@@ -26,8 +29,10 @@ func (m Map) Match(data interface{}) *Error {
 	return nil
 }
 
+// MapIncluding checks if a map contains keys that match the given values or matchers
 type MapIncluding map[string]interface{}
 
+// Match is the actual matching function to obey the Matcher Interface
 func (m MapIncluding) Match(data interface{}) *Error {
 	fieldError := &Error{}
 

@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// IsInteger checks if a value is an integer
 var IsInteger = MatcherFunc("IsInteger", isInteger)
 
 func isInteger(data interface{}) *Error {
@@ -20,6 +21,7 @@ func isInteger(data interface{}) *Error {
 	return SelfError(fmt.Sprintf("is no integer but %T", data))
 }
 
+// IsString checks if a value is an string
 var IsString = MatcherFunc("IsString", isString)
 
 func isString(data interface{}) *Error {
@@ -30,6 +32,7 @@ func isString(data interface{}) *Error {
 	return nil
 }
 
+// IsBool checks if a value is a bool
 var IsBool = MatcherFunc("IsBool", isBool)
 
 func isBool(data interface{}) *Error {
@@ -40,6 +43,7 @@ func isBool(data interface{}) *Error {
 	return nil
 }
 
+// IsFloat checks if a value is a float
 var IsFloat = MatcherFunc("IsFloat", isFloat)
 
 func isFloat(data interface{}) *Error {
@@ -51,6 +55,7 @@ func isFloat(data interface{}) *Error {
 	return SelfError(fmt.Sprintf("is no float but %T", data))
 }
 
+// IsPresent is a placeholder for Map to check if something "just exists"
 var IsPresent = MatcherFunc("IsPresent", isPresent)
 
 func isPresent(data interface{}) *Error {
@@ -58,6 +63,7 @@ func isPresent(data interface{}) *Error {
 	return nil
 }
 
+// IsTime checks if its a parsable time format.
 func IsTime(format string) Matcher {
 	return MatcherFunc("IsTime",
 		func(data interface{}) *Error {

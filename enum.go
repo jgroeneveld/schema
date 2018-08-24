@@ -2,6 +2,7 @@ package schema
 
 import "fmt"
 
+// StringEnum checks if a value is included in the given Enumeration
 func StringEnum(values ...string) Matcher {
 	return MatcherFunc("StringEnum", func(data interface{}) *Error {
 		actual, ok := data.(string)

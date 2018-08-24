@@ -6,10 +6,12 @@ import (
 	"strings"
 )
 
+// Error is used to record errors that happen during a schema check
 type Error struct {
 	Errors map[string]string
 }
 
+// Add adds an error
 func (e *Error) Add(field, message string) {
 	if e.Errors == nil {
 		e.Errors = map[string]string{}
@@ -20,6 +22,7 @@ func (e *Error) Add(field, message string) {
 	e.Errors[field] = message
 }
 
+// Any checks if there are any errors
 func (e *Error) Any() bool {
 	return len(e.Errors) > 0
 }
@@ -38,6 +41,7 @@ func (e *Error) Error() string {
 	return strings.Join(msgs, "\n")
 }
 
+// Merge merges another error into this error to have a error tree.
 func (e *Error) Merge(otherField string, other *Error) {
 	for field, msg := range other.Errors {
 		f := otherField
@@ -52,6 +56,7 @@ func (e *Error) Merge(otherField string, other *Error) {
 	}
 }
 
+// SelfError is an error without any field it describes
 func SelfError(msg string) *Error {
 	return &Error{
 		Errors: map[string]string{

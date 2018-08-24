@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// Array compares all values of the array one by one. Either specific or other Matchers.
 func Array(exps ...interface{}) Matcher {
 	return MatcherFunc("Array", func(data interface{}) *Error {
 		fieldError := &Error{}
@@ -32,6 +33,7 @@ func Array(exps ...interface{}) Matcher {
 	})
 }
 
+// ArrayEach checks all values of an array against the given value or Matcher
 func ArrayEach(exp interface{}) Matcher {
 	return MatcherFunc("ArrayEach", func(data interface{}) *Error {
 		fieldError := &Error{}
@@ -53,6 +55,7 @@ func ArrayEach(exp interface{}) Matcher {
 	})
 }
 
+// ArrayUnordered checks that all values or matchers are satisfied, ignoring the order of the array.
 func ArrayUnordered(exps ...interface{}) Matcher {
 	return MatcherFunc("ArrayUnordered", func(data interface{}) *Error {
 		fieldError := &Error{}
@@ -86,6 +89,7 @@ func ArrayUnordered(exps ...interface{}) Matcher {
 	})
 }
 
+// ArrayIncluding checks that all given Matchers or values are present in the array.
 func ArrayIncluding(exps ...interface{}) Matcher {
 	return MatcherFunc("ArrayIncluding", func(data interface{}) *Error {
 		dataArray, ok := data.([]interface{})

@@ -1,4 +1,4 @@
-// schema makes it easier to check if map/array structures match a certain schema. Great for testing JSON API's.
+// Package schema makes it easier to check if map/array structures match a certain schema. Great for testing JSON API's.
 //
 // Example:
 //
@@ -58,12 +58,14 @@ import (
 	"io"
 )
 
+// Matcher is the interface for all matchers
 type Matcher interface {
 	Match(data interface{}) *Error
 }
 
-func MatcherFunc(name string, fun func(data interface{}) *Error) *matcherFunc {
-	return &matcherFunc{
+// MatcherFunc turns a func into a Matcher
+func MatcherFunc(name string, fun func(data interface{}) *Error) *MatcherFuncImpl {
+	return &MatcherFuncImpl{
 		Name: name,
 		Fun:  fun,
 	}
