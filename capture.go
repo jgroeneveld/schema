@@ -1,6 +1,7 @@
 package schema
 
 import "fmt"
+
 // Capture can be used once or more to capture values and to make sure a value stays the same
 func Capture(name string) CaptureMatcher {
 	return &captureMatcher{
