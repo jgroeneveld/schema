@@ -1,7 +1,7 @@
 # schema [![GoDoc](https://godoc.org/github.com/jgroeneveld/schema?status.svg)](https://godoc.org/github.com/jgroeneveld/schema) [![GoReport](https://goreportcard.com/badge/github.com/jgroeneveld/schema)](https://goreportcard.com/report/github.com/jgroeneveld/schema)
 **schema** makes it easier to check if map/array structures match a certain schema. Great for testing JSON API's or validating the format of incoming requests and providing error messages to the api user.  Also see [trial](https://github.com/jgroeneveld/trial) for simple test assertions.
 
-The initial version was built during a [Dynport](https://github.com/dynport) hackday by [gfrey](https://github.com/gfrey) and [jgroenveld](https://github.com/jgroeneveld). It was inspired by [chancancode/json_expressions](https://github.com/chancancode/json_expressions)
+The initial version was built by [gfrey](https://github.com/gfrey) and [jgroenveld](https://github.com/jgroeneveld). It was inspired by [chancancode/json_expressions](https://github.com/chancancode/json_expressions)
 
 ## Example
 
