@@ -3,7 +3,7 @@ package schema
 import "testing"
 
 func TestArray_Success(t *testing.T) {
-	data := dataFromJSON(t, `["red", "blue", 12, "something_inbetween_we_dont_care_about", true]`)
+	data := dataFromJSON(t, `["red", "blue", 12, "something_we_dont_care_about", true]`)
 
 	err := Array("red", IsString, 12, IsPresent, true).Match(data)
 
