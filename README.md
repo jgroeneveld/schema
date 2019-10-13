@@ -3,6 +3,8 @@
 
 The initial version was built by [gfrey](https://github.com/gfrey) and [jgroenveld](https://github.com/jgroeneveld). It was inspired by [chancancode/json_expressions](https://github.com/chancancode/json_expressions)
 
+Coverage: https://gocover.io/github.com/jgroeneveld/schema
+
 ## Example
 
 [example_test.go](example_test.go)
